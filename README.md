@@ -1,5 +1,7 @@
 # LD38
 
+A game for the Ludum Dare 38 Game Jam
+
 ## Ideen
 
 * 2D

@@ -3,7 +3,7 @@ package com.mdeiml.ld38;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Building {
+public abstract class Building {
 
     public static final float BUILDINGS_OFFSET = 70;
     public static final float BUILDINGS_WIDTH = 50;
@@ -18,6 +18,14 @@ public class Building {
 
     public void render(SpriteBatch batch) {
         batch.draw(sprite, BUILDINGS_OFFSET + slot * BUILDINGS_WIDTH, 22);
+    }
+
+    public abstract boolean needsWorker();
+
+    public void use() {}
+
+    public int getSlot() {
+        return slot;
     }
 
 }

@@ -31,6 +31,15 @@ public class LD38 extends ApplicationAdapter {
 
 	Texture background;
 	TextureRegion[] icons;
+	TextureRegion[] buildingSprites;
+
+	int buildMenu;
+
+	boolean leftLast;
+	boolean rightLast;
+
+	public float wood;
+	public float iron;
 
 	@Override
 	public void create () {
@@ -38,6 +47,7 @@ public class LD38 extends ApplicationAdapter {
 
 		background = new Texture("background.png");
 		icons = TextureRegion.split(new Texture("icons.png"), 16, 16)[0];
+		buildingSprites = TextureRegion.split(new Texture("buildings.png"), 50, 50)[0];
 
 		float aspect = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
 		float width = aspect * CAM_HEIGHT;
@@ -53,15 +63,21 @@ public class LD38 extends ApplicationAdapter {
 		for(int i = 0; i < 7; i++) {
 			buildings[i] = null;
 		}
+		buildMenu = -1;
+
+		leftLast = false;
+		rightLast = false;
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0xc1/(float)0xff, 0xcc/(float)0xff, 0xdd/(float)0xff, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// input
 		Vector3 mousePos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f));
+		boolean leftClicked = Gdx.input.isButtonPressed(Input.Buttons.LEFT) && !leftLast;
+		boolean rightClicked = Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && !rightLast;
 
 		// cam movement
 		if(mousePos.x - cam.position.x < -cam.viewportWidth/2 + MOUSE_MOVEMENT_BORDER) {
@@ -70,6 +86,23 @@ public class LD38 extends ApplicationAdapter {
 			cam.position.x += CAMERA_SPEED * Gdx.graphics.getDeltaTime();
 		}
 		cam.position.x = Math.max(0, Math.min(background.getWidth(), cam.position.x));
+
+		// player movement
+		boolean playerMove = rightClicked;
+		for(int i = 0; i < buildings.length; i++) {
+			if(buildings[i] != null) {
+				float x = Building.BUILDINGS_OFFSET + i * Building.BUILDINGS_WIDTH;
+				if(rightClicked && mousePos.x > x && mousePos.x < x + Building.BUILDINGS_WIDTH && mousePos.y > 22 && mousePos.y < 72) {
+					playerMove = false;
+					if(buildings[i].needsWorker()) {
+						player.workAt(buildings[i]);
+					}
+				}
+			}
+		}
+		if(playerMove) {
+			player.walkTo(mousePos.x);
+		}
 
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
@@ -85,18 +118,41 @@ public class LD38 extends ApplicationAdapter {
 				buildings[i].render(batch);
 			}else {
 				float x = Building.BUILDINGS_OFFSET + (i+0.5f) * Building.BUILDINGS_WIDTH - 8;
-				batch.draw(icons[1], x, 30);
-				if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && mousePos.x > x && mousePos.x < x+16 && mousePos.y > 30 && mousePos.y < 46) {
-					System.out.println("OK");
+				if(leftClicked && mousePos.x > x && mousePos.x < x+16 && mousePos.y > 30 && mousePos.y < 46) {
+					if(buildMenu == i) {
+						buildMenu = -1;
+					}else {
+						buildMenu = i;
+					}
+				}
+				if(buildMenu == i) {
+					for(int j = 0; j < 7; j++) {
+						float x1 = x + 8 - 18 * 7 / 2f + 1 + j * 18;
+						if(leftClicked && mousePos.x > x1 && mousePos.x < x1+16 && mousePos.y > 48 && mousePos.y < 64) {
+							buildMenu = -1;
+							switch(j) {
+								case 0:
+									buildings[i] = new WoodChopper(i, buildingSprites, this);
+									break;
+								case 1:
+									buildings[i] = new Mine(i, buildingSprites, this);
+									break;
+								case 2:
+									buildings[i] = new House(i, buildingSprites);
+									break;
+							}
+						}
+						batch.draw(icons[j+2], x1, 48);
+					}
+					batch.draw(icons[1], x, 30);
+				}else {
+					batch.draw(icons[0], x, 30);
 				}
 			}
 		}
 
 		// player
 		player.render(batch);
-		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			player.walkTo(mousePos.x);
-		}
 
 		// waves
 		waveTimer += Gdx.graphics.getDeltaTime();
@@ -118,5 +174,8 @@ public class LD38 extends ApplicationAdapter {
 		}
 
 		batch.end();
+
+		leftLast = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+		rightLast = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
 	}
 }

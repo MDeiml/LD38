@@ -4,7 +4,7 @@ A game for the Ludum Dare 38 Game Jam
 
 Theme - A Small World
 
-## Ideen
+## Idea
 
 * 2D
 * Pixelart
@@ -12,6 +12,39 @@ Theme - A Small World
 * Side scroller
     * Round island -> looping
 * You are a pirate
+
+## Resources
+
+* Wood
+* Iron
+* Gold
+* Weapons
+
+## Buildings
+
+* Wood Chopper
+    * Cost: wood
+    * Produces wood
+* House
+    * Costs: wood
+    * You can buy other workers
+* Mine
+    * Costs: wood
+    * Produces iron
+* Shipyard
+    * Costs: wood, iron
+    * Needs wood, weapons
+    * Produces ships
+* Forge
+    * Costs: wood, iron
+    * Needs iron
+    * Produces weapons
+* Pub
+    * Costs: wood
+    * Sell rum to pirates
+* Rum destillery
+    * Costs: wood
+    * Produces: rum
 
 ### Things to do
 

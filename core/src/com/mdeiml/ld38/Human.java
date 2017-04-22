@@ -22,6 +22,7 @@ public class Human {
 	private float aim;
 	private boolean direction; // true = right, false = left
 	private float walkTimer;
+	private Building workBuilding;
 
     public Human(Texture spriteSheet) {
 		this.spriteSheet = spriteSheet;
@@ -34,10 +35,17 @@ public class Human {
 		aim = MIN_POS;
 		direction = true;
 		walkTimer = 0;
+		workBuilding = null;
 	}
 
 	public void walkTo(float x) {
 		aim = Math.max(MIN_POS, Math.min(MAX_POS, x));
+		workBuilding = null;
+	}
+
+	public void workAt(Building building) {
+		aim = Building.BUILDINGS_OFFSET + (building.getSlot() + 0.5f) * Building.BUILDINGS_WIDTH;
+		this.workBuilding = building;
 	}
 
 	public void render(SpriteBatch batch) {
@@ -53,6 +61,10 @@ public class Human {
 			direction = false;
 			batch.draw(walkLeft.getKeyFrame(walkTimer, true), position-12, 22);
 		}else {
+			if(workBuilding != null) {
+				workBuilding.use();
+			}
+
 			walkTimer = 0;
 			if(direction) {
 				batch.draw(standRight, position-12, 22);

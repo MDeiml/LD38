@@ -23,6 +23,7 @@ public class LD38 extends ApplicationAdapter {
 
 	SpriteBatch batch;
 	OrthographicCamera cam;
+	OrthographicCamera guiCam;
 	Human player;
 	Building[] buildings;
 
@@ -30,8 +31,10 @@ public class LD38 extends ApplicationAdapter {
 	float waveTimer;
 
 	Texture background;
-	TextureRegion[] icons;
+	TextureRegion[][] icons;
 	TextureRegion[] buildingSprites;
+	TextureRegion[] digits;
+	Texture guiBar;
 
 	int buildMenu;
 
@@ -46,13 +49,19 @@ public class LD38 extends ApplicationAdapter {
 		batch = new SpriteBatch();
 
 		background = new Texture("background.png");
-		icons = TextureRegion.split(new Texture("icons.png"), 16, 16)[0];
+		icons = TextureRegion.split(new Texture("icons.png"), 16, 16);
 		buildingSprites = TextureRegion.split(new Texture("buildings.png"), 50, 50)[0];
+		digits = TextureRegion.split(new Texture("digits.png"), 3, 5)[0];
+		guiBar = new Texture("gui_bar.png");
 
 		float aspect = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
 		float width = aspect * CAM_HEIGHT;
 		cam = new OrthographicCamera(width, CAM_HEIGHT);
 		cam.position.y = CAM_HEIGHT / 2;
+		guiCam = new OrthographicCamera(width, CAM_HEIGHT);
+		guiCam.position.y = -CAM_HEIGHT / 2;
+		guiCam.position.x = width / 2;
+		guiCam.update();
 
 		waves = new Texture("waves.png");
 		waveTimer = 0;
@@ -142,11 +151,11 @@ public class LD38 extends ApplicationAdapter {
 									break;
 							}
 						}
-						batch.draw(icons[j+2], x1, 48);
+						batch.draw(icons[0][j+2], x1, 48);
 					}
-					batch.draw(icons[1], x, 30);
+					batch.draw(icons[0][1], x, 30);
 				}else {
-					batch.draw(icons[0], x, 30);
+					batch.draw(icons[0][0], x, 30);
 				}
 			}
 		}
@@ -175,7 +184,19 @@ public class LD38 extends ApplicationAdapter {
 
 		batch.end();
 
+		// gui
+		batch.setProjectionMatrix(guiCam.combined);
+		batch.begin();
+
+		batch.draw(guiBar, 0, -11, guiCam.viewportWidth, 11);
+
+		batch.draw(icons[1][0], 1, -9, 8, 8);
+		Utils.drawNumber(103, 10, -8, batch, digits);
+
+		batch.end();
+
 		leftLast = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 		rightLast = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
 	}
+
 }

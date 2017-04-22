@@ -200,7 +200,7 @@ public class LD38 extends ApplicationAdapter {
 							buildMenu = -1;
 							switch(j) {
 								case 0:
-									buildings[i] = new WoodChopper(i, buildingSprites, this);
+									buildings[i] = new WoodChopper(i, buildingSprites, icons[0], this);
 									break;
 								case 1:
 									buildings[i] = new Mine(i, buildingSprites, this);

@@ -10,8 +10,8 @@ public class WoodChopper extends Building {
 
     private LD38 game;
 
-    public WoodChopper(int slot, TextureRegion[] sprites, LD38 game) {
-        super(sprites[1], slot);
+    public WoodChopper(int slot, TextureRegion[] sprites, TextureRegion[] toolSprites, LD38 game) {
+        super(sprites[1], toolSprites[1], slot);
         this.game = game;
     }
 

@@ -12,6 +12,8 @@ public class Human {
 	private static final float SPEED = 20;
 	public static final float MIN_POS = 11;
 	public static final float MAX_POS = 430;
+	private static final float TOOL_USE = 1f;
+	private static final float TOOL_IDLE = 1f;
 
 	private Texture spriteSheet;
 	private TextureRegion standRight;
@@ -24,6 +26,7 @@ public class Human {
 	private float walkTimer;
 	private Building workBuilding;
 	private boolean dead;
+	private float toolTimer;
 
     public Human(Texture spriteSheet) {
 		this.spriteSheet = spriteSheet;
@@ -36,6 +39,7 @@ public class Human {
 		aim = MIN_POS;
 		direction = true;
 		walkTimer = 0;
+		toolTimer = 0;
 		workBuilding = null;
 		dead = false;
 	}
@@ -65,25 +69,43 @@ public class Human {
 	public void render(SpriteBatch batch) {
 		walkTimer += Gdx.graphics.getDeltaTime();
 		if(position < aim) {
+			toolTimer = 0;
 			position += SPEED * Gdx.graphics.getDeltaTime();
 			position = Math.min(position, aim);
 			direction = true;
 			batch.draw(walkRight.getKeyFrame(walkTimer, true), position-12, 22);
 		}else if(position > aim) {
+			toolTimer = 0;
 			position -= SPEED * Gdx.graphics.getDeltaTime();
 			position = Math.max(position, aim);
 			direction = false;
 			batch.draw(walkLeft.getKeyFrame(walkTimer, true), position-12, 22);
 		}else {
+			walkTimer = 0;
 			if(workBuilding != null) {
 				workBuilding.use();
-			}
-
-			walkTimer = 0;
-			if(direction) {
 				batch.draw(standRight, position-12, 22);
+				if(workBuilding.getTool() != null) {
+					toolTimer += Gdx.graphics.getDeltaTime();
+					float angle = 0;
+					if(toolTimer > 0) {
+						if(toolTimer < TOOL_USE / 2) {
+							angle = toolTimer / (TOOL_USE / 2) * 90f;
+						}else if(toolTimer < TOOL_USE) {
+							angle = 90f - (toolTimer / (TOOL_USE / 2) - 1) * 90f;
+						}else {
+							toolTimer = -TOOL_IDLE;
+						}
+					}
+					batch.draw(workBuilding.getTool(), position-8, 24, 2, 8, 16, 16, 1, 1, angle);
+					System.out.println(1);
+				}
 			}else {
-				batch.draw(standLeft, position-12, 22);
+				if(direction) {
+					batch.draw(standRight, position-12, 22);
+				}else {
+					batch.draw(standLeft, position-12, 22);
+				}
 			}
 		}
 	}

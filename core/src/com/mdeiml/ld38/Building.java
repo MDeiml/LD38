@@ -10,10 +10,16 @@ public abstract class Building {
 
     private TextureRegion sprite;
     private int slot;
+    private TextureRegion tool;
 
-    public Building(TextureRegion sprite, int slot) {
+    public Building(TextureRegion sprite, TextureRegion tool, int slot) {
         this.sprite = sprite;
         this.slot = slot;
+        this.tool = tool;
+    }
+
+    public Building(TextureRegion sprite, int slot) {
+        this(sprite, null, slot);
     }
 
     public void render(SpriteBatch batch) {
@@ -21,6 +27,10 @@ public abstract class Building {
     }
 
     public abstract boolean needsWorker();
+
+    public TextureRegion getTool() {
+        return tool;
+    }
 
     public void use() {}
 

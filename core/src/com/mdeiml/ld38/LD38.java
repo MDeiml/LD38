@@ -43,6 +43,7 @@ public class LD38 extends ApplicationAdapter {
 
 	public float wood;
 	public float iron;
+	public float rum;
 
 	@Override
 	public void create () {
@@ -76,6 +77,10 @@ public class LD38 extends ApplicationAdapter {
 
 		leftLast = false;
 		rightLast = false;
+
+		wood = 0;
+		iron = 0;
+		rum = 0;
 	}
 
 	@Override
@@ -149,6 +154,9 @@ public class LD38 extends ApplicationAdapter {
 								case 2:
 									buildings[i] = new House(i, buildingSprites);
 									break;
+								case 3:
+									buildings[i] = new Distillery(i, buildingSprites, this);
+									break;
 							}
 						}
 						batch.draw(icons[0][j+2], x1, 48);
@@ -190,8 +198,21 @@ public class LD38 extends ApplicationAdapter {
 
 		batch.draw(guiBar, 0, -11, guiCam.viewportWidth, 11);
 
-		batch.draw(icons[1][0], 1, -9, 8, 8);
-		Utils.drawNumber((int)wood, 10, -8, batch, digits);
+		// wood
+		batch.draw(icons[1][1], 1, -9, 16, 16);
+		Utils.drawNumber((int)wood, 11, -8, batch, digits);
+
+		// iron
+		batch.draw(icons[1][2], 25, -9, 16, 16);
+		Utils.drawNumber((int)iron, 34, -8, batch, digits);
+
+		// rum
+		// (47, -9, 16, 16)
+		Utils.drawNumber((int)rum, 57, -8, batch, digits);
+
+		// weapons
+		batch.draw(icons[1][0], 70, -9, 16, 16);
+		Utils.drawNumber((int)0, 79, -8, batch, digits);
 
 		batch.end();
 

@@ -19,6 +19,7 @@ Theme - A Small World
 * Iron
 * Gold
 * Weapons
+* Rum
 
 ## Buildings
 

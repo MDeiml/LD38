@@ -14,6 +14,8 @@ public class LD38 extends ApplicationAdapter {
 	private static final float WAVE_BOB_HEIGHT = 5;
 	private static final float WAVE_BOB_OFFSET = 1;
 	private static final float WAVE_HEIGHT_OFFSET = 5;
+	private static final int MOUSE_MOVEMENT_BORDER = 20;
+	private static final float CAMERA_SPEED = 80;
 
 	SpriteBatch batch;
 	Texture background;
@@ -40,13 +42,20 @@ public class LD38 extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		// cam movement
+		if(Gdx.input.getX() < MOUSE_MOVEMENT_BORDER) {
+			cam.position.x -= CAMERA_SPEED * Gdx.graphics.getDeltaTime();
+		}else if(Gdx.input.getX() > Gdx.graphics.getWidth() - MOUSE_MOVEMENT_BORDER) {
+			cam.position.x += CAMERA_SPEED * Gdx.graphics.getDeltaTime();
+		}
+		cam.position.x = Math.max(0, Math.min(background.getWidth(), cam.position.x));
+
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
 
 		batch.begin();
 
 		// background
-
 		batch.draw(background, 0, 0);
 
 		// waves

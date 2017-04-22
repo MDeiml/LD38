@@ -21,12 +21,12 @@ public class LD38 extends ApplicationAdapter {
 	private static final float WAVE_HEIGHT_OFFSET = 5;
 	private static final int MOUSE_MOVEMENT_BORDER = 10;
 	private static final float CAMERA_SPEED = 120;
+	private static final float SHIP_INTERVAL = 20;
+	private static final float SHIP_STAY = 30;
 
 	SpriteBatch batch;
 	OrthographicCamera cam;
 	OrthographicCamera guiCam;
-	Human player;
-	ArrayList<Human> humans;
 	Building[] buildings;
 
 	Texture waves;
@@ -43,11 +43,17 @@ public class LD38 extends ApplicationAdapter {
 	boolean leftLast;
 	boolean rightLast;
 
+	public ArrayList<Human> humans;
+	private Human player;
+
 	public float wood;
 	public float iron;
 	public float rum;
 	public float weapons;
 	public float gold;
+
+	private float shipTimer;
+	private Ship ship;
 
 	@Override
 	public void create () {
@@ -76,8 +82,6 @@ public class LD38 extends ApplicationAdapter {
 		player = new Human(new Texture("player.png"));
 		humans.add(player);
 
-		humans.add(new Pirate(new Texture("player.png"), this));
-
 		buildings = new Building[7];
 		for(int i = 0; i < 7; i++) {
 			buildings[i] = null;
@@ -92,6 +96,9 @@ public class LD38 extends ApplicationAdapter {
 		rum = 0;
 		weapons = 0;
 		gold = 0;
+
+		shipTimer = -SHIP_INTERVAL;
+		ship = null;
 	}
 
 	@Override
@@ -101,6 +108,7 @@ public class LD38 extends ApplicationAdapter {
 		cam.setToOrtho(false, widthF, CAM_HEIGHT);
 		guiCam.setToOrtho(false, widthF, CAM_HEIGHT);
 		guiCam.position.x = widthF / 2;
+		guiCam.position.y = -CAM_HEIGHT / 2;
 		guiCam.update();
 	}
 
@@ -151,6 +159,24 @@ public class LD38 extends ApplicationAdapter {
 
 		batch.begin();
 
+		// ship
+		shipTimer += Gdx.graphics.getDeltaTime();
+		if(shipTimer >= 0) {
+			if(ship == null) {
+				ship = new Ship(new Texture("badlogic.jpg"), new Texture("player.png"), this);
+			}
+			if(shipTimer >= SHIP_STAY) {
+				ship.leave();
+			}
+		}
+		if(ship != null) {
+			ship.render(batch);
+			if(ship.dead()) {
+				ship = null;
+				shipTimer = -SHIP_INTERVAL;
+			}
+		}
+
 		// background
 		batch.draw(background, 0, 0);
 
@@ -189,6 +215,7 @@ public class LD38 extends ApplicationAdapter {
 									buildings[i] = new Bar(i, buildingSprites);
 									break;
 							}
+							buildings[i] = new Construction(i, buildingSprites, this, buildings[i], 2);
 						}
 						batch.draw(icons[0][j+2], x1, 48);
 					}
@@ -200,8 +227,12 @@ public class LD38 extends ApplicationAdapter {
 		}
 
 		// humans
-		for(Human h : humans) {
-			h.render(batch);
+		for(int i = 0; i < humans.size(); i++) {
+			humans.get(i).render(batch);
+			if(humans.get(i).dead()) {
+				humans.remove(i);
+				i--;
+			}
 		}
 
 		// waves

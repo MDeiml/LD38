@@ -12,6 +12,7 @@ public class Pirate extends Human {
     private int thirst;
     private float drinkTimer;
     private float waitTimer;
+    private boolean leave;
 
     public Pirate(Texture texture, LD38 game) {
         super(texture);
@@ -19,35 +20,48 @@ public class Pirate extends Human {
         this.thirst = (int)(Math.random()*2+1);
         drinkTimer = 0;
         waitTimer = 0;
+        leave = false;
+    }
+
+    public void leave() {
+        leave = true;
+        walkTo(MIN_POS);
     }
 
     public void render(SpriteBatch batch) {
-        if(thirst > 0 && game.rum >= 1) {
-            for(int i = 0; i < game.buildings.length; i++) {
-                if(game.buildings[i] instanceof Bar) {
-                    workAt(game.buildings[i]);
-                }
-            }
+        if(leave) {
             if(aim() == position()) {
-                drinkTimer += Gdx.graphics.getDeltaTime();
-                System.out.println(drinkTimer);
-                if(drinkTimer >= DRINK_TIME) {
-                    drinkTimer -= DRINK_TIME;
-                    thirst--;
-                    game.rum = game.rum - 1;
-                }
+                die();
             }
-            waitTimer = 0;
         }else {
-            if(waitTimer <= 0) {
-                walkTo((float)(Math.random() * 100 - 50 + position())*0.9f + (MAX_POS + MIN_POS) / 2 * 0.1f);
-                waitTimer = (float)(Math.random() * 3 + 1);
-            }else {
-                if(position() == aim()) {
-                    waitTimer -= Gdx.graphics.getDeltaTime();
+            if(thirst > 0 && game.rum >= 1) {
+                for(int i = 0; i < game.buildings.length; i++) {
+                    if(game.buildings[i] instanceof Bar) {
+                        workAt(game.buildings[i]);
+                    }
                 }
+                if(aim() == position()) {
+                    drinkTimer += Gdx.graphics.getDeltaTime();
+                    System.out.println(drinkTimer);
+                    if(drinkTimer >= DRINK_TIME) {
+                        drinkTimer -= DRINK_TIME;
+                        thirst--;
+                        game.rum = game.rum - 1;
+                        game.gold = game.gold + 1;
+                    }
+                }
+                waitTimer = 0;
+            }else {
+                if(waitTimer <= 0) {
+                    walkTo((float)(Math.random() * 100 - 50 + position())*0.9f + (MAX_POS + MIN_POS) / 2 * 0.1f);
+                    waitTimer = (float)(Math.random() * 3 + 1);
+                }else {
+                    if(position() == aim()) {
+                        waitTimer -= Gdx.graphics.getDeltaTime();
+                    }
+                }
+                drinkTimer = 0;
             }
-            drinkTimer = 0;
         }
         super.render(batch);
     }

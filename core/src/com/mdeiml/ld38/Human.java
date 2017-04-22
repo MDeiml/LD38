@@ -23,6 +23,7 @@ public class Human {
 	private boolean direction; // true = right, false = left
 	private float walkTimer;
 	private Building workBuilding;
+	private boolean dead;
 
     public Human(Texture spriteSheet) {
 		this.spriteSheet = spriteSheet;
@@ -36,6 +37,15 @@ public class Human {
 		direction = true;
 		walkTimer = 0;
 		workBuilding = null;
+		dead = false;
+	}
+
+	public boolean dead() {
+		return dead;
+	}
+
+	public void die() {
+		dead = true;
 	}
 
 	public void walkTo(float x) {
@@ -46,6 +56,10 @@ public class Human {
 	public void workAt(Building building) {
 		aim = Building.BUILDINGS_OFFSET + (building.getSlot() + 0.5f) * Building.BUILDINGS_WIDTH;
 		this.workBuilding = building;
+	}
+
+	public Building getWorkBuilding() {
+		return workBuilding;
 	}
 
 	public void render(SpriteBatch batch) {

@@ -95,6 +95,16 @@ public class LD38 extends ApplicationAdapter {
 	}
 
 	@Override
+	public void resize(int width, int height) {
+		float aspect = (float)width / (float)height;
+		float widthF = aspect * CAM_HEIGHT;
+		cam.setToOrtho(false, widthF, CAM_HEIGHT);
+		guiCam.setToOrtho(false, widthF, CAM_HEIGHT);
+		guiCam.position.x = widthF / 2;
+		guiCam.update();
+	}
+
+	@Override
 	public void render () {
 		Gdx.gl.glClearColor(0xc1/(float)0xff, 0xcc/(float)0xff, 0xdd/(float)0xff, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -103,6 +113,13 @@ public class LD38 extends ApplicationAdapter {
 		Vector3 mousePos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f));
 		boolean leftClicked = Gdx.input.isButtonPressed(Input.Buttons.LEFT) && !leftLast;
 		boolean rightClicked = Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && !rightLast;
+		if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+			if(Gdx.graphics.isFullscreen()) {
+				Gdx.graphics.setWindowedMode(800, 600);
+			}else {
+				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+			}
+		}
 
 		// cam movement
 		if(mousePos.x - cam.position.x < -cam.viewportWidth/2 + MOUSE_MOVEMENT_BORDER) {

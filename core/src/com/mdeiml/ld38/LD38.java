@@ -5,8 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.Input;
 
 public class LD38 extends ApplicationAdapter {
 
@@ -16,7 +19,7 @@ public class LD38 extends ApplicationAdapter {
 	private static final float WAVE_BOB_OFFSET = 1;
 	private static final float WAVE_HEIGHT_OFFSET = 5;
 	private static final int MOUSE_MOVEMENT_BORDER = 10;
-	private static final float CAMERA_SPEED = 80;
+	private static final float CAMERA_SPEED = 120;
 
 	SpriteBatch batch;
 	Texture background;
@@ -24,6 +27,8 @@ public class LD38 extends ApplicationAdapter {
 
 	Texture waves;
 	float waveTimer;
+
+	Human player;
 
 	@Override
 	public void create () {
@@ -36,6 +41,8 @@ public class LD38 extends ApplicationAdapter {
 
 		waves = new Texture("waves.png");
 		waveTimer = 0;
+
+		player = new Human(new Texture("player.png"));
 	}
 
 	@Override
@@ -45,6 +52,11 @@ public class LD38 extends ApplicationAdapter {
 
 		// input
 		Vector3 mousePos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f));
+
+		// player movement
+		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+			player.walkTo(mousePos.x);
+		}
 
 		// cam movement
 		if(mousePos.x - cam.position.x < -cam.viewportWidth/2 + MOUSE_MOVEMENT_BORDER) {
@@ -61,6 +73,9 @@ public class LD38 extends ApplicationAdapter {
 
 		// background
 		batch.draw(background, 0, 0);
+
+		// player
+		player.render(batch);
 
 		// waves
 		waveTimer += Gdx.graphics.getDeltaTime();

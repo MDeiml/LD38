@@ -22,18 +22,23 @@ public class LD38 extends ApplicationAdapter {
 	private static final float CAMERA_SPEED = 120;
 
 	SpriteBatch batch;
-	Texture background;
 	OrthographicCamera cam;
+	Human player;
+	Building[] buildings;
 
 	Texture waves;
 	float waveTimer;
 
-	Human player;
+	Texture background;
+	TextureRegion[] icons;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+
 		background = new Texture("background.png");
+		icons = TextureRegion.split(new Texture("icons.png"), 16, 16)[0];
+
 		float aspect = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
 		float width = aspect * CAM_HEIGHT;
 		cam = new OrthographicCamera(width, CAM_HEIGHT);
@@ -43,6 +48,11 @@ public class LD38 extends ApplicationAdapter {
 		waveTimer = 0;
 
 		player = new Human(new Texture("player.png"));
+
+		buildings = new Building[7];
+		for(int i = 0; i < 7; i++) {
+			buildings[i] = null;
+		}
 	}
 
 	@Override
@@ -52,11 +62,6 @@ public class LD38 extends ApplicationAdapter {
 
 		// input
 		Vector3 mousePos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f));
-
-		// player movement
-		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			player.walkTo(mousePos.x);
-		}
 
 		// cam movement
 		if(mousePos.x - cam.position.x < -cam.viewportWidth/2 + MOUSE_MOVEMENT_BORDER) {
@@ -74,8 +79,24 @@ public class LD38 extends ApplicationAdapter {
 		// background
 		batch.draw(background, 0, 0);
 
+		// buildings
+		for(int i = 0; i < buildings.length; i++) {
+			if(buildings[i] != null) {
+				buildings[i].render(batch);
+			}else {
+				float x = Building.BUILDINGS_OFFSET + (i+0.5f) * Building.BUILDINGS_WIDTH - 8;
+				batch.draw(icons[1], x, 30);
+				if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && mousePos.x > x && mousePos.x < x+16 && mousePos.y > 30 && mousePos.y < 46) {
+					System.out.println("OK");
+				}
+			}
+		}
+
 		// player
 		player.render(batch);
+		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+			player.walkTo(mousePos.x);
+		}
 
 		// waves
 		waveTimer += Gdx.graphics.getDeltaTime();

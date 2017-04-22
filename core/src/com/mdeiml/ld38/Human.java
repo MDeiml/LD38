@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 public class Human {
 
 	private static final float SPEED = 20;
-	private static final float MIN_POS = 11;
-	private static final float MAX_POS = 430;
+	public static final float MIN_POS = 11;
+	public static final float MAX_POS = 430;
 
 	private Texture spriteSheet;
 	private TextureRegion standRight;
@@ -76,6 +76,10 @@ public class Human {
 
 	public float position() {
 		return position;
+	}
+
+	public float aim() {
+		return aim;
 	}
 
 	public void position(float x) {

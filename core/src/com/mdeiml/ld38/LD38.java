@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.Input;
+import java.util.ArrayList;
 
 public class LD38 extends ApplicationAdapter {
 
@@ -25,6 +26,7 @@ public class LD38 extends ApplicationAdapter {
 	OrthographicCamera cam;
 	OrthographicCamera guiCam;
 	Human player;
+	ArrayList<Human> humans;
 	Building[] buildings;
 
 	Texture waves;
@@ -44,6 +46,8 @@ public class LD38 extends ApplicationAdapter {
 	public float wood;
 	public float iron;
 	public float rum;
+	public float weapons;
+	public float gold;
 
 	@Override
 	public void create () {
@@ -67,7 +71,12 @@ public class LD38 extends ApplicationAdapter {
 		waves = new Texture("waves.png");
 		waveTimer = 0;
 
+		humans = new ArrayList<Human>();
+
 		player = new Human(new Texture("player.png"));
+		humans.add(player);
+
+		humans.add(new Pirate(new Texture("player.png"), this));
 
 		buildings = new Building[7];
 		for(int i = 0; i < 7; i++) {
@@ -81,6 +90,8 @@ public class LD38 extends ApplicationAdapter {
 		wood = 0;
 		iron = 0;
 		rum = 0;
+		weapons = 0;
+		gold = 0;
 	}
 
 	@Override
@@ -157,6 +168,9 @@ public class LD38 extends ApplicationAdapter {
 								case 3:
 									buildings[i] = new Distillery(i, buildingSprites, this);
 									break;
+								case 4:
+									buildings[i] = new Bar(i, buildingSprites);
+									break;
 							}
 						}
 						batch.draw(icons[0][j+2], x1, 48);
@@ -168,8 +182,10 @@ public class LD38 extends ApplicationAdapter {
 			}
 		}
 
-		// player
-		player.render(batch);
+		// humans
+		for(Human h : humans) {
+			h.render(batch);
+		}
 
 		// waves
 		waveTimer += Gdx.graphics.getDeltaTime();
@@ -207,12 +223,16 @@ public class LD38 extends ApplicationAdapter {
 		Utils.drawNumber((int)iron, 34, -8, batch, digits);
 
 		// rum
-		// (47, -9, 16, 16)
+		batch.draw(icons[1][3], 47, -9, 16, 16);
 		Utils.drawNumber((int)rum, 57, -8, batch, digits);
 
 		// weapons
 		batch.draw(icons[1][0], 70, -9, 16, 16);
-		Utils.drawNumber((int)0, 79, -8, batch, digits);
+		Utils.drawNumber((int)weapons, 79, -8, batch, digits);
+
+		// gold
+		batch.draw(icons[1][4], 92, -9, 16, 16);
+		Utils.drawNumber((int)gold, 101, -8, batch, digits);
 
 		batch.end();
 

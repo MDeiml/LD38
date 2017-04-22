@@ -31,6 +31,7 @@ public class LD38 extends ApplicationAdapter {
 
 	Texture background;
 	TextureRegion[] icons;
+	TextureRegion[] buildingSprites;
 
 	int buildMenu;
 
@@ -38,6 +39,7 @@ public class LD38 extends ApplicationAdapter {
 	boolean rightLast;
 
 	public float wood;
+	public float iron;
 
 	@Override
 	public void create () {
@@ -45,6 +47,7 @@ public class LD38 extends ApplicationAdapter {
 
 		background = new Texture("background.png");
 		icons = TextureRegion.split(new Texture("icons.png"), 16, 16)[0];
+		buildingSprites = TextureRegion.split(new Texture("buildings.png"), 50, 50)[0];
 
 		float aspect = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
 		float width = aspect * CAM_HEIGHT;
@@ -68,7 +71,6 @@ public class LD38 extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		// c1ccdd
 		Gdx.gl.glClearColor(0xc1/(float)0xff, 0xcc/(float)0xff, 0xdd/(float)0xff, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -130,7 +132,13 @@ public class LD38 extends ApplicationAdapter {
 							buildMenu = -1;
 							switch(j) {
 								case 0:
-									buildings[i] = new WoodChopper(j, this);
+									buildings[i] = new WoodChopper(i, buildingSprites, this);
+									break;
+								case 1:
+									buildings[i] = new Mine(i, buildingSprites, this);
+									break;
+								case 2:
+									buildings[i] = new House(i, buildingSprites);
 									break;
 							}
 						}

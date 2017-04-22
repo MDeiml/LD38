@@ -4,14 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class WoodChopper extends Building {
+public class Mine extends Building {
 
-    private static final float WOOD_PER_SECOND = 2f/3f;
+    private static final float IRON_PER_SECOND = 1f/3f;
 
     private LD38 game;
 
-    public WoodChopper(int slot, TextureRegion[] sprites, LD38 game) {
-        super(sprites[1], slot);
+    public Mine(int slot, TextureRegion[] sprites, LD38 game) {
+        super(sprites[2], slot);
         this.game = game;
     }
 
@@ -20,7 +20,7 @@ public class WoodChopper extends Building {
     }
 
     public void use() {
-        game.wood += WOOD_PER_SECOND * Gdx.graphics.getDeltaTime();
+        game.iron += IRON_PER_SECOND * Gdx.graphics.getDeltaTime();
     }
 
 }

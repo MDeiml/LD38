@@ -42,7 +42,6 @@ public class Pirate extends Human {
                 }
                 if(aim() == position()) {
                     drinkTimer += Gdx.graphics.getDeltaTime();
-                    System.out.println(drinkTimer);
                     if(drinkTimer >= DRINK_TIME) {
                         drinkTimer -= DRINK_TIME;
                         thirst--;

@@ -102,8 +102,8 @@ public class LD38 extends ApplicationAdapter {
 			if(buildings[i] != null) {
 				float x = Building.BUILDINGS_OFFSET + i * Building.BUILDINGS_WIDTH;
 				if(rightClicked && mousePos.x > x && mousePos.x < x + Building.BUILDINGS_WIDTH && mousePos.y > 22 && mousePos.y < 72) {
-					playerMove = false;
 					if(buildings[i].needsWorker()) {
+						playerMove = false;
 						player.workAt(buildings[i]);
 					}
 				}
@@ -191,7 +191,7 @@ public class LD38 extends ApplicationAdapter {
 		batch.draw(guiBar, 0, -11, guiCam.viewportWidth, 11);
 
 		batch.draw(icons[1][0], 1, -9, 8, 8);
-		Utils.drawNumber(103, 10, -8, batch, digits);
+		Utils.drawNumber((int)wood, 10, -8, batch, digits);
 
 		batch.end();
 

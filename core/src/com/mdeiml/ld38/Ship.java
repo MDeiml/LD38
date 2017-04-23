@@ -17,13 +17,13 @@ public class Ship {
     private Texture texture;
     private float crewTimer;
     private LD38 game;
-    private TextureRegion crewTexture;
+    private TextureRegion[] crewTextures;
     private boolean leave;
     private boolean dead;
 
-    public Ship(Texture texture, TextureRegion crewTexture, LD38 game) {
+    public Ship(Texture texture, TextureRegion[] crewTextures, LD38 game) {
         this.texture = texture;
-        this.crewTexture = crewTexture;
+        this.crewTextures = crewTextures;
         this.game = game;
         numCrew = (int)(Math.random() * 3 + 2);
         position = START_POSITION;
@@ -58,7 +58,7 @@ public class Ship {
                     if(crewTimer <= 0) {
                         crewTimer += (float)(Math.random() * 1 + CREW_INTERVAL);
                         numCrew--;
-                        game.humans.add(new Pirate(crewTexture, game));
+                        game.humans.add(new Pirate(crewTextures[(int)(Math.random()*crewTextures.length)], game));
                     }
                 }
             }

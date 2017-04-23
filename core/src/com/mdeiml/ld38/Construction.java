@@ -24,9 +24,11 @@ public class Construction extends Building {
         timer -= Gdx.graphics.getDeltaTime();
         if(timer < 0) {
             game.buildings[getSlot()] = building;
-            for(Human h : game.humans) {
-                if(h.getWorkBuilding() == this) {
-                    h.workAt(building);
+            if(building.needsWorker()) {
+                for(Human h : game.humans) {
+                    if(h.getWorkBuilding() == this) {
+                        h.workAt(building);
+                    }
                 }
             }
         }

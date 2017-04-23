@@ -24,6 +24,8 @@ public class LD38 extends ApplicationAdapter {
 	private static final float CAMERA_SPEED = 120;
 	private static final float SHIP_INTERVAL = 20;
 	private static final float SHIP_STAY = 30;
+	private static final int[] WOOD_COSTS = new int[] {20, 40, 40, 50, 0, 60};
+	private static final int[] IRON_COSTS = new int[] {0, 0, 0, 0, 20, 0};
 
 	SpriteBatch batch;
 	OrthographicCamera cam;
@@ -37,6 +39,7 @@ public class LD38 extends ApplicationAdapter {
 	TextureRegion[][] icons;
 	TextureRegion[] buildingSprites;
 	TextureRegion[] digits;
+	TextureRegion[] redDigits;
 	Texture guiBar;
 	Texture shipTexture;
 	Texture playerSprites;
@@ -73,6 +76,7 @@ public class LD38 extends ApplicationAdapter {
 		icons = TextureRegion.split(new Texture("icons.png"), 16, 16);
 		buildingSprites = TextureRegion.split(new Texture("buildings.png"), 50, 50)[0];
 		digits = TextureRegion.split(new Texture("digits.png"), 3, 5)[0];
+		redDigits = TextureRegion.split(new Texture("digitsred.png"), 3, 5)[0];
 		guiBar = new Texture("gui_bar.png");
 		shipTexture = new Texture("ship.png");
 		playerSprites = new Texture("player.png");
@@ -255,29 +259,43 @@ public class LD38 extends ApplicationAdapter {
 				if(buildMenu == i) {
 					for(int j = 0; j < 6; j++) {
 						float x1 = x + 8 - 18 * 6 / 2f + 1 + j * 18;
-						if(leftClicked && mousePos.x > x1 && mousePos.x < x1+16 && mousePos.y > 48 && mousePos.y < 64) {
-							buildMenu = -1;
-							switch(j) {
-								case 0:
-									buildings[i] = new WoodChopper(i, buildingSprites, icons[2], this);
-									break;
-								case 1:
-									buildings[i] = new Mine(i, buildingSprites, icons[2], this);
-									break;
-								case 2:
-									buildings[i] = new Distillery(i, buildingSprites, this);
-									break;
-								case 3:
-									buildings[i] = new Bar(i, buildingSprites, icons[2]);
-									break;
-								case 4:
-									buildings[i] = new Forge(i, buildingSprites, icons[2], this);
-									break;
-								case 5:
-									buildings[i] = new Shipyard(i, buildingSprites, icons[2], this);
-									break;
+						if(mousePos.x > x1 && mousePos.x < x1+16 && mousePos.y > 48 && mousePos.y < 64) {
+							int woodCost = WOOD_COSTS[j];
+							batch.setProjectionMatrix(guiCam.combined);
+							if(woodCost > 0) {
+								batch.draw(redDigits[10], 11, -17);
+								Utils.drawNumber(woodCost, 15, -17, batch, redDigits);
 							}
-							buildings[i] = new Construction(i, buildingSprites, icons[2], this, buildings[i], 2);
+							int ironCost = IRON_COSTS[j];
+							if(ironCost > 0) {
+								batch.draw(redDigits[10], 34, -17);
+								Utils.drawNumber(ironCost, 38, -17, batch, redDigits);
+							}
+							batch.setProjectionMatrix(cam.combined);
+							if(leftClicked && wood >= woodCost && iron >= ironCost) {
+								buildMenu = -1;
+								switch(j) {
+									case 0:
+										buildings[i] = new WoodChopper(i, buildingSprites, icons[2], this);
+										break;
+									case 1:
+										buildings[i] = new Mine(i, buildingSprites, icons[2], this);
+										break;
+									case 2:
+										buildings[i] = new Distillery(i, buildingSprites, this);
+										break;
+									case 3:
+										buildings[i] = new Bar(i, buildingSprites, icons[2]);
+										break;
+									case 4:
+										buildings[i] = new Forge(i, buildingSprites, icons[2], this);
+										break;
+									case 5:
+										buildings[i] = new Shipyard(i, buildingSprites, icons[2], this);
+										break;
+								}
+								buildings[i] = new Construction(i, buildingSprites, icons[2], this, buildings[i], 2);
+							}
 						}
 						batch.draw(icons[0][j+2], x1, 48);
 					}

@@ -20,7 +20,7 @@ public class Construction extends Building {
         return true;
     }
 
-    public void use() {
+    public boolean use() {
         timer -= Gdx.graphics.getDeltaTime();
         if(timer < 0) {
             game.buildings[getSlot()] = building;
@@ -34,6 +34,7 @@ public class Construction extends Building {
                 }
             }
         }
+        return true;
     }
 
 }

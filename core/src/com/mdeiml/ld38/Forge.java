@@ -20,7 +20,7 @@ public class Forge extends Building {
         return true;
     }
 
-    public void use() {
+    public boolean use() {
         if(game.iron >= 1) {
             timer += Gdx.graphics.getDeltaTime() * WEAPONS_PER_SECOND;
         }else {
@@ -31,6 +31,7 @@ public class Forge extends Building {
             game.weapons++;
             timer = 0;
         }
+        return game.iron >= 1;
     }
 
 }

@@ -12,4 +12,8 @@ public class Bar extends Building {
         return false;
     }
 
+    public boolean use() {
+        return true;
+    }
+
 }

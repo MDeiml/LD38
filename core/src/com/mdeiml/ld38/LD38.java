@@ -48,7 +48,7 @@ public class LD38 extends ApplicationAdapter {
 	boolean rightLast;
 
 	public ArrayList<Human> humans;
-	private Human player;
+	public Human player;
 	private float playerStart;
 
 	public float wood;
@@ -193,6 +193,12 @@ public class LD38 extends ApplicationAdapter {
 				}
 			}
 			if(rightClicked) {
+				if(playerShip != null && playerShip.canBoard() && mousePos.x > PlayerShip.START_POS && mousePos.x < PlayerShip.START_POS + 100 && mousePos.y < 80) {
+					player.workAt(playerShip);
+					rightClicked = false;
+				}
+			}
+			if(rightClicked) {
 				player.walkTo(mousePos.x);
 			}
 		}else {
@@ -222,10 +228,6 @@ public class LD38 extends ApplicationAdapter {
 			}
 		}
 
-		// player ship
-		if(playerShip != null) {
-			playerShip.render(batch);
-		}
 
 		// background
 		batch.draw(background, 0, 0);
@@ -302,6 +304,12 @@ public class LD38 extends ApplicationAdapter {
 		// waves
 		waveTimer += Gdx.graphics.getDeltaTime();
 		for(int j = 0; j < 2; j++) {
+			if(j == 1) {
+				// player ship
+				if(playerShip != null) {
+					playerShip.render(batch);
+				}
+			}
 			float wavePos = (j % 2 == 0 ? 1 : -1) * (waveTimer % waves.getWidth() * WAVE_SPEED);
 			float waveStart = cam.position.x - cam.viewportWidth / 2f - wavePos;
 			float waveOffset = waveStart % waves.getWidth();

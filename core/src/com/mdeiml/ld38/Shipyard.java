@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Shipyard extends Building {
 
-    private static final float BUILD_TIME = 30;
+    private static final float BUILD_TIME = 10;
 
     private LD38 game;
     private float timer;
@@ -22,31 +22,35 @@ public class Shipyard extends Building {
         return true;
     }
 
-    public void use() {
+    public boolean use() {
         if(timer == 0) {
             if(game.wood >= 40 && game.weapons >= 20) {
                 timer = BUILD_TIME;
                 game.wood -= 40;
                 game.weapons -= 20;
+                return true;
             }else {
                 for(Human h : game.humans) {
                     if(h.getWorkBuilding() == this) {
                         h.workAt(null);
                     }
                 }
+                return false;
             }
-        }else if (timer > 0){
+        }else if (timer > 0) {
             timer -= Gdx.graphics.getDeltaTime();
-            if(timer < 0) {
+            if(timer <= 0) {
                 timer = 0;
-                game.playerShip = new PlayerShip(new Texture("ship.png"), BUILDINGS_OFFSET + BUILDINGS_WIDTH * getSlot());
+                game.playerShip = new PlayerShip(new Texture("ship.png"), BUILDINGS_OFFSET + BUILDINGS_WIDTH * getSlot(), game);
                 for(Human h : game.humans) {
                     if(h.getWorkBuilding() == this) {
                         h.workAt(null);
                     }
                 }
             }
+            return true;
         }
+        return false;
     }
 
 }

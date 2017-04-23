@@ -19,8 +19,9 @@ public class WoodChopper extends Building {
         return true;
     }
 
-    public void use() {
+    public boolean use() {
         game.wood += WOOD_PER_SECOND * Gdx.graphics.getDeltaTime();
+        return true;
     }
 
 }

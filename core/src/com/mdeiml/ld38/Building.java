@@ -32,7 +32,9 @@ public abstract class Building {
         return tool;
     }
 
-    public void use() {}
+    public boolean use() {
+        return false;
+    }
 
     public int getSlot() {
         return slot;

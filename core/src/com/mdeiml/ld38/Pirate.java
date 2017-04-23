@@ -47,7 +47,7 @@ public class Pirate extends Human {
                         workAt(game.buildings[i]);
                     }
                 }
-                if(aim() == position()) {
+                if(getWorkBuilding() != null && aim() == position()) {
                     drinkTimer += Gdx.graphics.getDeltaTime();
                     if(drinkTimer >= DRINK_TIME) {
                         drinkTimer -= DRINK_TIME;

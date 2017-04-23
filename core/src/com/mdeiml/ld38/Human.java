@@ -68,6 +68,7 @@ public class Human {
 			return;
 		}
 		aim = Building.BUILDINGS_OFFSET + (building.getSlot() + 0.5f) * Building.BUILDINGS_WIDTH;
+		aim = Math.max(MIN_POS, Math.min(MAX_POS, aim));
 		this.workBuilding = building;
 	}
 
@@ -91,8 +92,9 @@ public class Human {
 			batch.draw(walkLeft.getKeyFrame(walkTimer, true), position-12, 22);
 		}else {
 			walkTimer = 0;
+			boolean canUse = false;
 			if(workBuilding != null) {
-				workBuilding.use();
+				canUse = workBuilding.use();
 			}
 			if(workBuilding != null) {
 				batch.draw(standRight, position-12, 22);
@@ -108,7 +110,9 @@ public class Human {
 							toolTimer = -TOOL_IDLE;
 						}
 					}
-					batch.draw(workBuilding.getTool(), position, 21, 3, 8, 16, 16, 1, 1, angle);
+					if(canUse) {
+						batch.draw(workBuilding.getTool(), position, 21, 3, 8, 16, 16, 1, 1, angle);
+					}
 				}
 			}else {
 				if(direction) {

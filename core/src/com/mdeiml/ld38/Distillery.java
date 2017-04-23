@@ -18,8 +18,9 @@ public class Distillery extends Building {
         return true;
     }
 
-    public void use() {
+    public boolean use() {
         game.rum += RUM_PER_SECOND * Gdx.graphics.getDeltaTime();
+        return true;
     }
 
 }

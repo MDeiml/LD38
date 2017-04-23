@@ -19,8 +19,9 @@ public class Mine extends Building {
         return true;
     }
 
-    public void use() {
+    public boolean use() {
         game.iron += IRON_PER_SECOND * Gdx.graphics.getDeltaTime();
+        return true;
     }
 
 }

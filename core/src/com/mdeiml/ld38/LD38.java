@@ -256,6 +256,9 @@ public class LD38 extends ApplicationAdapter {
 								case 5:
 									buildings[i] = new Forge(i, buildingSprites, icons[2], this);
 									break;
+								case 6:
+									buildings[i] = new Shipyard(i, buildingSprites, icons[2], this);
+									break;
 							}
 							buildings[i] = new Construction(i, buildingSprites, icons[2], this, buildings[i], 2);
 						}

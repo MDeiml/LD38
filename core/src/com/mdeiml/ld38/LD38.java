@@ -161,10 +161,12 @@ public class LD38 extends ApplicationAdapter {
 						break;
 					}else if(mousePos.y >= 22+24 && mousePos.y < 22+24+16) {
 						if(player instanceof Pirate && gold >= 10) {
+							gold -= 10;
 							leftClicked = false;
 							humans.remove(player);
 							player = new Human(new TextureRegion(playerSprites, 0, 0, 4*24, 2*24));
 							player.position(playerStart);
+							player.walkTo(playerStart);
 							humans.add(player);
 							break;
 						}

@@ -9,8 +9,8 @@ public class Construction extends Building {
     private Building building;
     private float timer;
 
-    public Construction(int slot, TextureRegion[] sprites, LD38 game, Building building, float buildTime) {
-        super(sprites[5], slot);
+    public Construction(int slot, TextureRegion[] sprites, TextureRegion[] toolSprites, LD38 game, Building building, float buildTime) {
+        super(sprites[5], toolSprites[3], slot);
         this.game = game;
         this.building = building;
         this.timer = buildTime;

@@ -10,8 +10,8 @@ public class Mine extends Building {
 
     private LD38 game;
 
-    public Mine(int slot, TextureRegion[] sprites, LD38 game) {
-        super(sprites[2], slot);
+    public Mine(int slot, TextureRegion[] sprites, TextureRegion[] toolSprites, LD38 game) {
+        super(sprites[2], toolSprites[2], slot);
         this.game = game;
     }
 

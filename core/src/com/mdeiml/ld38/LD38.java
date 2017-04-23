@@ -37,6 +37,7 @@ public class LD38 extends ApplicationAdapter {
 	TextureRegion[] buildingSprites;
 	TextureRegion[] digits;
 	Texture guiBar;
+	Texture shipTexture;
 
 	int buildMenu;
 
@@ -64,6 +65,7 @@ public class LD38 extends ApplicationAdapter {
 		buildingSprites = TextureRegion.split(new Texture("buildings.png"), 50, 50)[0];
 		digits = TextureRegion.split(new Texture("digits.png"), 3, 5)[0];
 		guiBar = new Texture("gui_bar.png");
+		shipTexture = new Texture("ship.png");
 
 		float aspect = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
 		float width = aspect * CAM_HEIGHT;
@@ -163,7 +165,7 @@ public class LD38 extends ApplicationAdapter {
 		shipTimer += Gdx.graphics.getDeltaTime();
 		if(shipTimer >= 0) {
 			if(ship == null) {
-				ship = new Ship(new Texture("badlogic.jpg"), new Texture("player.png"), this);
+				ship = new Ship(shipTexture, new Texture("player.png"), this);
 			}
 			if(shipTimer >= SHIP_STAY) {
 				ship.leave();
@@ -200,10 +202,10 @@ public class LD38 extends ApplicationAdapter {
 							buildMenu = -1;
 							switch(j) {
 								case 0:
-									buildings[i] = new WoodChopper(i, buildingSprites, icons[0], this);
+									buildings[i] = new WoodChopper(i, buildingSprites, icons[2], this);
 									break;
 								case 1:
-									buildings[i] = new Mine(i, buildingSprites, this);
+									buildings[i] = new Mine(i, buildingSprites, icons[2], this);
 									break;
 								case 2:
 									buildings[i] = new House(i, buildingSprites);
@@ -212,10 +214,10 @@ public class LD38 extends ApplicationAdapter {
 									buildings[i] = new Distillery(i, buildingSprites, this);
 									break;
 								case 4:
-									buildings[i] = new Bar(i, buildingSprites);
+									buildings[i] = new Bar(i, buildingSprites, icons[2]);
 									break;
 							}
-							buildings[i] = new Construction(i, buildingSprites, this, buildings[i], 2);
+							buildings[i] = new Construction(i, buildingSprites, icons[2], this, buildings[i], 2);
 						}
 						batch.draw(icons[0][j+2], x1, 48);
 					}

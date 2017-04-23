@@ -97,8 +97,7 @@ public class Human {
 							toolTimer = -TOOL_IDLE;
 						}
 					}
-					batch.draw(workBuilding.getTool(), position-8, 24, 2, 8, 16, 16, 1, 1, angle);
-					System.out.println(1);
+					batch.draw(workBuilding.getTool(), position, 21, 3, 8, 16, 16, 1, 1, angle);
 				}
 			}else {
 				if(direction) {

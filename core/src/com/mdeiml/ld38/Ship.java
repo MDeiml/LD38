@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 
 public class Ship {
 
-    public static final float SPEED = 100;
+    public static final float SPEED = 70;
     public static final float START_POSITION = -300;
     public static final float DOCK_POSITION = -50;
     public static final float CREW_INTERVAL = 2;

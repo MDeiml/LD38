@@ -38,6 +38,8 @@ public class LD38 extends ApplicationAdapter {
 	TextureRegion[] digits;
 	Texture guiBar;
 	Texture shipTexture;
+	Texture playerSprites;
+	TextureRegion playerIcon;
 
 	int buildMenu;
 
@@ -66,6 +68,8 @@ public class LD38 extends ApplicationAdapter {
 		digits = TextureRegion.split(new Texture("digits.png"), 3, 5)[0];
 		guiBar = new Texture("gui_bar.png");
 		shipTexture = new Texture("ship.png");
+		playerSprites = new Texture("player.png");
+		playerIcon = new TextureRegion(playerSprites, 0, 24*2, 24, 24);
 
 		float aspect = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
 		float width = aspect * CAM_HEIGHT;
@@ -81,8 +85,9 @@ public class LD38 extends ApplicationAdapter {
 
 		humans = new ArrayList<Human>();
 
-		player = new Human(new Texture("player.png"));
+		player = new Human(new TextureRegion(playerSprites, 0, 0, 24*4, 24*2));
 		humans.add(player);
+		humans.add(new Human(new TextureRegion(playerSprites, 0, 0, 24*4, 24*2)));
 
 		buildings = new Building[7];
 		for(int i = 0; i < 7; i++) {
@@ -140,19 +145,29 @@ public class LD38 extends ApplicationAdapter {
 		cam.position.x = Math.max(0, Math.min(background.getWidth(), cam.position.x));
 
 		// player movement
-		boolean playerMove = rightClicked;
+		if(leftClicked) {
+			for(Human h : humans) {
+				if(!(h instanceof Pirate)) {
+					if(mousePos.x > h.position()-12 && mousePos.x < h.position() + 12 && mousePos.y > 22 && mousePos.y < 22+24) {
+						player = h;
+						leftClicked = false;
+						break;
+					}
+				}
+			}
+		}
 		for(int i = 0; i < buildings.length; i++) {
 			if(buildings[i] != null) {
 				float x = Building.BUILDINGS_OFFSET + i * Building.BUILDINGS_WIDTH;
 				if(rightClicked && mousePos.x > x && mousePos.x < x + Building.BUILDINGS_WIDTH && mousePos.y > 22 && mousePos.y < 72) {
 					if(buildings[i].needsWorker()) {
-						playerMove = false;
+						rightClicked = false;
 						player.workAt(buildings[i]);
 					}
 				}
 			}
 		}
-		if(playerMove) {
+		if(rightClicked) {
 			player.walkTo(mousePos.x);
 		}
 
@@ -165,7 +180,7 @@ public class LD38 extends ApplicationAdapter {
 		shipTimer += Gdx.graphics.getDeltaTime();
 		if(shipTimer >= 0) {
 			if(ship == null) {
-				ship = new Ship(shipTexture, new Texture("player.png"), this);
+				ship = new Ship(shipTexture, new TextureRegion(playerSprites, 0, 0, 24*4, 24*2), this);
 			}
 			if(shipTimer >= SHIP_STAY) {
 				ship.leave();
@@ -230,8 +245,12 @@ public class LD38 extends ApplicationAdapter {
 
 		// humans
 		for(int i = 0; i < humans.size(); i++) {
-			humans.get(i).render(batch);
-			if(humans.get(i).dead()) {
+			Human h = humans.get(i);
+			h.render(batch);
+			if(h == player) {
+				batch.draw(playerIcon, player.position()-12, 22+24);
+			}
+			if(h.dead()) {
 				humans.remove(i);
 				i--;
 			}

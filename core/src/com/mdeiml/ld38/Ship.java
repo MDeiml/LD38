@@ -2,6 +2,7 @@ package com.mdeiml.ld38;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.Gdx;
 
 public class Ship {
@@ -16,11 +17,11 @@ public class Ship {
     private Texture texture;
     private float crewTimer;
     private LD38 game;
-    private Texture crewTexture;
+    private TextureRegion crewTexture;
     private boolean leave;
     private boolean dead;
 
-    public Ship(Texture texture, Texture crewTexture, LD38 game) {
+    public Ship(Texture texture, TextureRegion crewTexture, LD38 game) {
         this.texture = texture;
         this.crewTexture = crewTexture;
         this.game = game;

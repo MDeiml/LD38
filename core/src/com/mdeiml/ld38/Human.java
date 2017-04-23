@@ -15,7 +15,7 @@ public class Human {
 	private static final float TOOL_USE = 1f;
 	private static final float TOOL_IDLE = 1f;
 
-	private Texture spriteSheet;
+	private TextureRegion spriteSheet;
 	private TextureRegion standRight;
 	private TextureRegion standLeft;
 	private Animation walkRight;
@@ -28,9 +28,9 @@ public class Human {
 	private boolean dead;
 	private float toolTimer;
 
-    public Human(Texture spriteSheet) {
+    public Human(TextureRegion spriteSheet) {
 		this.spriteSheet = spriteSheet;
-		TextureRegion[][] frames = TextureRegion.split(spriteSheet, 24, 24);
+		TextureRegion[][] frames = spriteSheet.split(24, 24);
 		standRight = frames[0][0];
 		standLeft = frames[1][0];
 		walkRight = new Animation(0.2f, frames[0]);

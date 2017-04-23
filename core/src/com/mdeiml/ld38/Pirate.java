@@ -2,6 +2,7 @@ package com.mdeiml.ld38;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.Gdx;
 
 public class Pirate extends Human {
@@ -14,7 +15,7 @@ public class Pirate extends Human {
     private float waitTimer;
     private boolean leave;
 
-    public Pirate(Texture texture, LD38 game) {
+    public Pirate(TextureRegion texture, LD38 game) {
         super(texture);
         this.game = game;
         this.thirst = (int)(Math.random()*2+1);

@@ -24,9 +24,15 @@ public class Pirate extends Human {
         leave = false;
     }
 
+    public void walkTo(float x) {
+        if(leave)
+            return;
+        super.walkTo(x);
+    }
+
     public void leave() {
-        leave = true;
         walkTo(MIN_POS);
+        leave = true;
     }
 
     public void render(SpriteBatch batch) {

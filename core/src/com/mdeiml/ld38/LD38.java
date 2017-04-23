@@ -107,7 +107,7 @@ public class LD38 extends ApplicationAdapter {
 		iron = 0;
 		rum = 0;
 		weapons = 0;
-		gold = 0;
+		gold = 10;
 
 		shipTimer = -SHIP_INTERVAL;
 		ship = null;
@@ -151,12 +151,24 @@ public class LD38 extends ApplicationAdapter {
 
 		// player movement
 		if(leftClicked) {
-			for(Human h : humans) {
-				if(mousePos.x > h.position()-12 && mousePos.x < h.position() + 12 && mousePos.y > 22 && mousePos.y < 22+24) {
-					player = h;
-					playerStart = player.position();
-					leftClicked = false;
-					break;
+			for(int i = 0; i < humans.size(); i++) {
+				Human h = humans.get(i);
+				if(mousePos.x > h.position()-12 && mousePos.x < h.position() + 12) {
+					if(mousePos.y > 22 && mousePos.y < 22+24) {
+						player = h;
+						playerStart = player.position();
+						leftClicked = false;
+						break;
+					}else if(mousePos.y >= 22+24 && mousePos.y < 22+24+16) {
+						if(player instanceof Pirate && gold >= 10) {
+							leftClicked = false;
+							humans.remove(player);
+							player = new Human(new TextureRegion(playerSprites, 0, 0, 4*24, 2*24));
+							player.position(playerStart);
+							humans.add(player);
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -260,8 +272,12 @@ public class LD38 extends ApplicationAdapter {
 		for(int i = 0; i < humans.size(); i++) {
 			Human h = humans.get(i);
 			h.render(batch);
-			if(h == player && !(player instanceof Pirate)) {
-				batch.draw(playerIcon, player.position()-12, 22+24);
+			if(h == player) {
+				if(!(player instanceof Pirate)) {
+					batch.draw(playerIcon, player.position()-12, 22+24);
+				}else {
+					batch.draw(icons[1][5], player.position()-8, 22+24);
+				}
 			}
 			if(h.dead()) {
 				humans.remove(i);

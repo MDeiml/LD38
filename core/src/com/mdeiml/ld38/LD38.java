@@ -68,6 +68,9 @@ public class LD38 extends ApplicationAdapter {
 
 	private BitmapFont font;
 
+	private float menuTimer;
+	private Texture startScreen;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -114,16 +117,19 @@ public class LD38 extends ApplicationAdapter {
 		leftLast = false;
 		rightLast = false;
 
-		wood = 100;
-		iron = 100;
-		rum = 100;
-		weapons = 100;
-		gold = 100;
+		wood = 20;
+		iron = 0;
+		rum = 0;
+		weapons = 0;
+		gold = 10;
 
 		shipTimer = -SHIP_INTERVAL;
 		ship = null;
 
 		playerShip = null;
+
+		menuTimer = 10;
+		startScreen = new Texture("letter.png");
 	}
 
 	@Override
@@ -139,6 +145,16 @@ public class LD38 extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		if(menuTimer > 0) {
+			Gdx.gl.glClearColor(0,0,0,1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			menuTimer -= Gdx.graphics.getDeltaTime();
+			batch.setProjectionMatrix(guiCam.combined);
+			batch.begin();
+			batch.draw(startScreen, guiCam.viewportWidth/2-150/2, -150);
+			batch.end();
+			return;
+		}
 		Gdx.gl.glClearColor(0xc1/(float)0xff, 0xcc/(float)0xff, 0xdd/(float)0xff, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -162,10 +178,19 @@ public class LD38 extends ApplicationAdapter {
 		}
 		cam.position.x = Math.max(0, Math.min(background.getWidth(), cam.position.x));
 
+		cam.update();
+		batch.setProjectionMatrix(cam.combined);
+
+		batch.begin();
+
 		// player movement
-		if(leftClicked) {
+		if(player instanceof Pirate) {
 			if(mousePos.y >= 22+24 && mousePos.y < 22+24+16) {
-				if(player instanceof Pirate && gold >= 10) {
+				batch.setProjectionMatrix(guiCam.combined);
+				batch.draw(redDigits[10], 101, -17);
+				Utils.drawNumber(10, 105, -17, batch, redDigits);
+				batch.setProjectionMatrix(cam.combined);
+				if(leftClicked && gold >= 10) {
 					gold -= 10;
 					leftClicked = false;
 					humans.remove(player);
@@ -215,11 +240,6 @@ public class LD38 extends ApplicationAdapter {
 		}else {
 			player.walkTo(playerStart);
 		}
-
-		cam.update();
-		batch.setProjectionMatrix(cam.combined);
-
-		batch.begin();
 
 		// ship
 		shipTimer += Gdx.graphics.getDeltaTime();
@@ -273,6 +293,8 @@ public class LD38 extends ApplicationAdapter {
 							}
 							batch.setProjectionMatrix(cam.combined);
 							if(leftClicked && wood >= woodCost && iron >= ironCost) {
+								wood -= woodCost;
+								iron -= ironCost;
 								buildMenu = -1;
 								switch(j) {
 									case 0:

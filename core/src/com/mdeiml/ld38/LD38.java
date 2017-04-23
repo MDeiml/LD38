@@ -2,14 +2,15 @@ package com.mdeiml.ld38;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.Input;
 import java.util.ArrayList;
 
 public class LD38 extends ApplicationAdapter {
@@ -62,6 +63,8 @@ public class LD38 extends ApplicationAdapter {
 
 	public PlayerShip playerShip;
 
+	private BitmapFont font;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -78,6 +81,8 @@ public class LD38 extends ApplicationAdapter {
 		for(int i = 0; i < 2; i++) {
 			crewTextures[i] = new TextureRegion(playerSprites, 0, (i+1)*2*24, 4*24, 2*24);
 		}
+
+		font = new BitmapFont(Gdx.files.internal("ascii.fnt"));
 
 		float aspect = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
 		float width = aspect * CAM_HEIGHT;
@@ -155,6 +160,19 @@ public class LD38 extends ApplicationAdapter {
 
 		// player movement
 		if(leftClicked) {
+			if(mousePos.y >= 22+24 && mousePos.y < 22+24+16) {
+				if(player instanceof Pirate && gold >= 10) {
+					gold -= 10;
+					leftClicked = false;
+					humans.remove(player);
+					player = new Human(new TextureRegion(playerSprites, 0, player.getTextureY()+4*24, 4*24, 2*24));
+					player.position(playerStart);
+					player.walkTo(playerStart);
+					humans.add(player);
+				}
+			}
+		}
+		if(leftClicked) {
 			for(int i = 0; i < humans.size(); i++) {
 				Human h = humans.get(i);
 				if(mousePos.x > h.position()-12 && mousePos.x < h.position() + 12) {
@@ -163,17 +181,6 @@ public class LD38 extends ApplicationAdapter {
 						playerStart = player.position();
 						leftClicked = false;
 						break;
-					}else if(mousePos.y >= 22+24 && mousePos.y < 22+24+16) {
-						if(player instanceof Pirate && gold >= 10) {
-							gold -= 10;
-							leftClicked = false;
-							humans.remove(player);
-							player = new Human(new TextureRegion(playerSprites, 0, player.getTextureY()+4*24, 4*24, 2*24));
-							player.position(playerStart);
-							player.walkTo(playerStart);
-							humans.add(player);
-							break;
-						}
 					}
 				}
 			}
@@ -246,8 +253,8 @@ public class LD38 extends ApplicationAdapter {
 					}
 				}
 				if(buildMenu == i) {
-					for(int j = 0; j < 7; j++) {
-						float x1 = x + 8 - 18 * 7 / 2f + 1 + j * 18;
+					for(int j = 0; j < 6; j++) {
+						float x1 = x + 8 - 18 * 6 / 2f + 1 + j * 18;
 						if(leftClicked && mousePos.x > x1 && mousePos.x < x1+16 && mousePos.y > 48 && mousePos.y < 64) {
 							buildMenu = -1;
 							switch(j) {
@@ -258,18 +265,15 @@ public class LD38 extends ApplicationAdapter {
 									buildings[i] = new Mine(i, buildingSprites, icons[2], this);
 									break;
 								case 2:
-									buildings[i] = new House(i, buildingSprites);
-									break;
-								case 3:
 									buildings[i] = new Distillery(i, buildingSprites, this);
 									break;
-								case 4:
+								case 3:
 									buildings[i] = new Bar(i, buildingSprites, icons[2]);
 									break;
-								case 5:
+								case 4:
 									buildings[i] = new Forge(i, buildingSprites, icons[2], this);
 									break;
-								case 6:
+								case 5:
 									buildings[i] = new Shipyard(i, buildingSprites, icons[2], this);
 									break;
 							}

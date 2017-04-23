@@ -60,6 +60,8 @@ public class LD38 extends ApplicationAdapter {
 	private float shipTimer;
 	private Ship ship;
 
+	public PlayerShip playerShip;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -103,14 +105,16 @@ public class LD38 extends ApplicationAdapter {
 		leftLast = false;
 		rightLast = false;
 
-		wood = 0;
-		iron = 0;
-		rum = 0;
-		weapons = 0;
-		gold = 10;
+		wood = 100;
+		iron = 100;
+		rum = 100;
+		weapons = 100;
+		gold = 100;
 
 		shipTimer = -SHIP_INTERVAL;
 		ship = null;
+
+		playerShip = null;
 	}
 
 	@Override
@@ -216,6 +220,11 @@ public class LD38 extends ApplicationAdapter {
 				ship = null;
 				shipTimer = -SHIP_INTERVAL;
 			}
+		}
+
+		// player ship
+		if(playerShip != null) {
+			playerShip.render(batch);
 		}
 
 		// background

@@ -3,6 +3,7 @@ package com.mdeiml.ld38;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
 
 public class Shipyard extends Building {
 
@@ -38,6 +39,7 @@ public class Shipyard extends Building {
             timer -= Gdx.graphics.getDeltaTime();
             if(timer < 0) {
                 timer = 0;
+                game.playerShip = new PlayerShip(new Texture("ship.png"), BUILDINGS_OFFSET + BUILDINGS_WIDTH * getSlot());
                 for(Human h : game.humans) {
                     if(h.getWorkBuilding() == this) {
                         h.workAt(null);

@@ -14,6 +14,7 @@ public class Shipyard extends Building {
     public Shipyard(int slot, TextureRegion[] sprites, TextureRegion[] toolSprites, LD38 game) {
         super(sprites[7], toolSprites[3], slot);
         this.game = game;
+        timer = 0;
     }
 
     public boolean needsWorker() {
@@ -21,15 +22,28 @@ public class Shipyard extends Building {
     }
 
     public void use() {
-        if(game.wood >= 40 && game.weapons >= 20) {
-            timer += Gdx.graphics.getDeltaTime();
-            if(timer > BUILD_TIME) {
-                timer = 0;
+        if(timer == 0) {
+            if(game.wood >= 40 && game.weapons >= 20) {
+                timer = BUILD_TIME;
                 game.wood -= 40;
                 game.weapons -= 20;
+            }else {
+                for(Human h : game.humans) {
+                    if(h.getWorkBuilding() == this) {
+                        h.workAt(null);
+                    }
+                }
             }
-        }else {
-            timer = 0;
+        }else if (timer > 0){
+            timer -= Gdx.graphics.getDeltaTime();
+            if(timer < 0) {
+                timer = 0;
+                for(Human h : game.humans) {
+                    if(h.getWorkBuilding() == this) {
+                        h.workAt(null);
+                    }
+                }
+            }
         }
     }
 

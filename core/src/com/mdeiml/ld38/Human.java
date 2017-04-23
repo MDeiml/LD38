@@ -44,6 +44,11 @@ public class Human {
 		dead = false;
 	}
 
+	public int getTextureY() {
+		System.out.println(spriteSheet.getRegionY());
+		return spriteSheet.getRegionY();
+	}
+
 	public boolean dead() {
 		return dead;
 	}
@@ -60,6 +65,7 @@ public class Human {
 	public void workAt(Building building) {
 		if(building == null) {
 			workBuilding = null;
+			return;
 		}
 		aim = Building.BUILDINGS_OFFSET + (building.getSlot() + 0.5f) * Building.BUILDINGS_WIDTH;
 		this.workBuilding = building;
@@ -87,6 +93,8 @@ public class Human {
 			walkTimer = 0;
 			if(workBuilding != null) {
 				workBuilding.use();
+			}
+			if(workBuilding != null) {
 				batch.draw(standRight, position-12, 22);
 				if(workBuilding.getTool() != null) {
 					toolTimer += Gdx.graphics.getDeltaTime();

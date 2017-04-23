@@ -164,7 +164,7 @@ public class LD38 extends ApplicationAdapter {
 							gold -= 10;
 							leftClicked = false;
 							humans.remove(player);
-							player = new Human(new TextureRegion(playerSprites, 0, 0, 4*24, 2*24));
+							player = new Human(new TextureRegion(playerSprites, 0, player.getTextureY()+4*24, 4*24, 2*24));
 							player.position(playerStart);
 							player.walkTo(playerStart);
 							humans.add(player);

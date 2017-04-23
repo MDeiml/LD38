@@ -4,6 +4,12 @@ A game for the Ludum Dare 38 Game Jam
 
 Theme - A Small World
 
+
+## TODO
+
+* Build ships
+* Workers using tools despite not working
+
 ## Idea
 
 * 2D

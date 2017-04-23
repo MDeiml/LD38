@@ -39,6 +39,7 @@ public class LD38 extends ApplicationAdapter {
 	Texture guiBar;
 	Texture shipTexture;
 	Texture playerSprites;
+	TextureRegion[] crewTextures;
 	TextureRegion playerIcon;
 
 	int buildMenu;
@@ -69,7 +70,11 @@ public class LD38 extends ApplicationAdapter {
 		guiBar = new Texture("gui_bar.png");
 		shipTexture = new Texture("ship.png");
 		playerSprites = new Texture("player.png");
-		playerIcon = new TextureRegion(playerSprites, 0, 24*2, 24, 24);
+		playerIcon = new TextureRegion(playerSprites, 0, 24*10, 24, 24);
+		crewTextures = new TextureRegion[2];
+		for(int i = 0; i < 2; i++) {
+			crewTextures[i] = new TextureRegion(playerSprites, 0, (i+1)*2*24, 4*24, 2*24);
+		}
 
 		float aspect = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
 		float width = aspect * CAM_HEIGHT;
@@ -180,7 +185,7 @@ public class LD38 extends ApplicationAdapter {
 		shipTimer += Gdx.graphics.getDeltaTime();
 		if(shipTimer >= 0) {
 			if(ship == null) {
-				ship = new Ship(shipTexture, new TextureRegion(playerSprites, 0, 0, 24*4, 24*2), this);
+				ship = new Ship(shipTexture, crewTextures, this);
 			}
 			if(shipTimer >= SHIP_STAY) {
 				ship.leave();
@@ -230,6 +235,9 @@ public class LD38 extends ApplicationAdapter {
 									break;
 								case 4:
 									buildings[i] = new Bar(i, buildingSprites, icons[2]);
+									break;
+								case 5:
+									buildings[i] = new Forge(i, buildingSprites, icons[2], this);
 									break;
 							}
 							buildings[i] = new Construction(i, buildingSprites, icons[2], this, buildings[i], 2);

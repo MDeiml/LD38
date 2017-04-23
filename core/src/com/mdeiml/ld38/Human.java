@@ -58,6 +58,9 @@ public class Human {
 	}
 
 	public void workAt(Building building) {
+		if(building == null) {
+			workBuilding = null;
+		}
 		aim = Building.BUILDINGS_OFFSET + (building.getSlot() + 0.5f) * Building.BUILDINGS_WIDTH;
 		this.workBuilding = building;
 	}

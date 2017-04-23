@@ -49,6 +49,7 @@ public class LD38 extends ApplicationAdapter {
 
 	public ArrayList<Human> humans;
 	private Human player;
+	private float playerStart;
 
 	public float wood;
 	public float iron;
@@ -92,7 +93,6 @@ public class LD38 extends ApplicationAdapter {
 
 		player = new Human(new TextureRegion(playerSprites, 0, 0, 24*4, 24*2));
 		humans.add(player);
-		humans.add(new Human(new TextureRegion(playerSprites, 0, 0, 24*4, 24*2)));
 
 		buildings = new Building[7];
 		for(int i = 0; i < 7; i++) {
@@ -152,28 +152,33 @@ public class LD38 extends ApplicationAdapter {
 		// player movement
 		if(leftClicked) {
 			for(Human h : humans) {
-				if(!(h instanceof Pirate)) {
-					if(mousePos.x > h.position()-12 && mousePos.x < h.position() + 12 && mousePos.y > 22 && mousePos.y < 22+24) {
-						player = h;
-						leftClicked = false;
-						break;
-					}
+				if(mousePos.x > h.position()-12 && mousePos.x < h.position() + 12 && mousePos.y > 22 && mousePos.y < 22+24) {
+					player = h;
+					playerStart = player.position();
+					leftClicked = false;
+					break;
 				}
 			}
 		}
-		for(int i = 0; i < buildings.length; i++) {
-			if(buildings[i] != null) {
-				float x = Building.BUILDINGS_OFFSET + i * Building.BUILDINGS_WIDTH;
-				if(rightClicked && mousePos.x > x && mousePos.x < x + Building.BUILDINGS_WIDTH && mousePos.y > 22 && mousePos.y < 72) {
-					if(buildings[i].needsWorker()) {
-						rightClicked = false;
-						player.workAt(buildings[i]);
+		if(!(player instanceof Pirate)) {
+			if(rightClicked) {
+				for(int i = 0; i < buildings.length; i++) {
+					if(buildings[i] != null) {
+						float x = Building.BUILDINGS_OFFSET + i * Building.BUILDINGS_WIDTH;
+						if(mousePos.x > x && mousePos.x < x + Building.BUILDINGS_WIDTH && mousePos.y > 22 && mousePos.y < 72) {
+							if(buildings[i].needsWorker()) {
+								rightClicked = false;
+								player.workAt(buildings[i]);
+							}
+						}
 					}
 				}
 			}
-		}
-		if(rightClicked) {
-			player.walkTo(mousePos.x);
+			if(rightClicked) {
+				player.walkTo(mousePos.x);
+			}
+		}else {
+			player.walkTo(playerStart);
 		}
 
 		cam.update();
@@ -255,7 +260,7 @@ public class LD38 extends ApplicationAdapter {
 		for(int i = 0; i < humans.size(); i++) {
 			Human h = humans.get(i);
 			h.render(batch);
-			if(h == player) {
+			if(h == player && !(player instanceof Pirate)) {
 				batch.draw(playerIcon, player.position()-12, 22+24);
 			}
 			if(h.dead()) {
